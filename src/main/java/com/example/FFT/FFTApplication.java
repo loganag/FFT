@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class FFTApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("mainApp.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(FFTApplication.class.getResource("mainApp.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 900);
         stage.setTitle("Быстрое преобразование Фурье");
         stage.setScene(scene);
