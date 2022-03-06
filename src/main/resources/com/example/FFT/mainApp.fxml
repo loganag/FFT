@@ -3,6 +3,7 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FFT.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -55,44 +56,47 @@
     </MenuBar>
     <AnchorPane id="initTextField" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextField id="initTextField" layoutX="143.0" layoutY="28.0" prefWidth="78.0" />
-            <Label layoutX="28.0" layoutY="32.0" text="Начало диапазона" />
-            <Label layoutX="28.0" layoutY="68.0" text="Конец диапазона" />
-            <Label layoutX="28.0" layoutY="102.0" text="Шаг дискретизации" />
-            <TextField id="finalTextField" layoutX="143.0" layoutY="64.0" prefHeight="25.0" prefWidth="78.0" />
-            <TextField id="sampling" layoutX="143.0" layoutY="98.0" prefHeight="25.0" prefWidth="78.0" />
-            <LineChart layoutX="238.0" layoutY="14.0" prefWidth="500.0" title="Аналоговый сигнал">
+            <TextField fx:id="initTextField" layoutX="144.0" layoutY="66.0" prefWidth="78.0" />
+            <Label layoutX="29.0" layoutY="70.0" text="Начало диапазона" />
+            <Label layoutX="29.0" layoutY="106.0" text="Конец диапазона" />
+            <Label layoutX="29.0" layoutY="140.0" text="Шаг дискретизации" />
+            <TextField fx:id="finalTextField" layoutX="144.0" layoutY="102.0" prefHeight="25.0" prefWidth="78.0" />
+            <TextField fx:id="sampling" layoutX="144.0" layoutY="136.0" prefHeight="25.0" prefWidth="78.0" />
+            <LineChart fx:id="analogChart" layoutX="238.0" layoutY="14.0" prefWidth="500.0" title="Аналоговый сигнал">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis side="BOTTOM"/>
               </xAxis>
               <yAxis>
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart layoutX="766.0" layoutY="14.0" title="Дискретный сигнал">
+            <LineChart fx:id="discreteChart" layoutX="766.0" layoutY="14.0" title="Дискретный сигнал">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis side="BOTTOM"/>
               </xAxis>
               <yAxis>
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart layoutX="238.0" layoutY="422.0" title="Квантованный сигнал">
+            <LineChart fx:id="quantizedChart" layoutX="238.0" layoutY="422.0" title="Квантованный сигнал">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis side="BOTTOM"/>
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT"/>
+              </yAxis>
+            </LineChart>
+            <LineChart fx:id="fftChart" layoutX="766.0" layoutY="422.0" title="Результат БПФ">
+              <xAxis>
+                <CategoryAxis side="BOTTOM"/>
               </xAxis>
               <yAxis>
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <LineChart layoutX="766.0" layoutY="422.0" title="Результат БПФ">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </LineChart>
+            <Button fx:id="buildButton" layoutX="95.0" layoutY="189.0" mnemonicParsing="false" onMouseClicked="#buildButtonClicked" text="Построить" />
+            <Label layoutX="29.0" layoutY="31.0" text="y(x) =" />
+            <TextField id="functionTextField" layoutX="62.0" layoutY="27.0" prefHeight="25.0" prefWidth="159.0" />
          </children>
     </AnchorPane>
   </children>
