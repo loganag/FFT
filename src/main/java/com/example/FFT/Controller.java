@@ -2,8 +2,8 @@ package com.example.FFT;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
@@ -33,24 +33,28 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Axis<Number> xAxisAnalog = analogChart.getXAxis();
-        Axis<Number> yAxisAnalog = analogChart.getYAxis();
+        NumberAxis xAxisAnalog = (NumberAxis) analogChart.getXAxis();
+        NumberAxis yAxisAnalog = (NumberAxis) analogChart.getYAxis();
         xAxisAnalog.setLabel("Время (сек)");
         yAxisAnalog.setLabel("Амплитуда");
+        analogChart.setCreateSymbols(false);
 
-        Axis<Number> xAxisDiscrete = discreteChart.getXAxis();
-        Axis<Number> yAxisDiscrete = discreteChart.getYAxis();
+        NumberAxis xAxisDiscrete = (NumberAxis) discreteChart.getXAxis();
+        NumberAxis yAxisDiscrete = (NumberAxis) discreteChart.getYAxis();
         xAxisDiscrete.setLabel("Время (сек)");
         yAxisDiscrete.setLabel("Амплитуда");
 
-        Axis<Number> xAxisQuantized = quantizedChart.getXAxis();
-        Axis<Number> yAxisQuantized = quantizedChart.getYAxis();
+        NumberAxis xAxisQuantized = (NumberAxis) quantizedChart.getXAxis();
+        NumberAxis yAxisQuantized = (NumberAxis) quantizedChart.getYAxis();
         xAxisQuantized.setLabel("Время (сек)");
         yAxisQuantized.setLabel("Амплитуда");
 
-        Axis<Number> xAxisFFT = fftChart.getXAxis();
-        Axis<Number> yAxisFFT = fftChart.getYAxis();
+        NumberAxis xAxisFFT = (NumberAxis) fftChart.getXAxis();
+        NumberAxis yAxisFFT = (NumberAxis) fftChart.getYAxis();
         xAxisFFT.setLabel("Частота (Гц)");
         yAxisFFT.setLabel("Магнитуда");
+
+        analogChart.getData().add(CalculatingGraphs.getAnalogDataSeries("y(x)=cos(x)+sin(2*x)",0, 8, 0.1));
+
     }
 }
