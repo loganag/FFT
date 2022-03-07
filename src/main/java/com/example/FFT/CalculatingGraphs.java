@@ -1,10 +1,16 @@
 package com.example.FFT;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 import org.mariuszgromada.math.mxparser.Function;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class CalculatingGraphs {
 
@@ -53,8 +59,150 @@ public class CalculatingGraphs {
 
             x += sampling;
         }
+    }
+
+    public static void buildingQuantizedGraph(LineChart<Number, Number> quantizedChart, String function, double initValue, double finalValue, double sampling)
+    {
+        double y;
+        double y1;
+        int sign;
+        int n = (int) Math.floor((finalValue-initValue)/sampling) + 1;
+        //List<ArrayList<Light.Point>> points = new ArrayList<>();
+        ArrayList<Double> points = new ArrayList<>();
+        Function f1 = new Function(function);
+
+        XYChart.Series dataSeries = new XYChart.Series();
+
+        double x = initValue;
+        while(!(x>=finalValue))
+        {
+
+            y = f1.calculate(x);
+            sign = (int) Math.signum(y);
+            //System.out.println(sign);
+            y1 = (Math.abs(y)%sampling);
+            if(y1 == 0)
+                points.add(y);
+            else
+            {
+                y1 = Math.abs(y) + (sampling-y1);
+                points.add(sign * y1);
+            }
+            x+=sampling;
+        }
+
+        //x = initValue;
+/*        for (int i = 0; i < points.size()-1; i++) {
+*//*            //dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+            //x+=sampling;
+            //System.out.println(points.get(i));
+            try {
+                if((Math.abs(points.get(i+1)) > Math.abs((2*points.get(i))) || (Math.abs(points.get(i+1)) < Math.abs((2*points.get(i))))))
+               //if(points.get(i+1) > (2 * points.get(i)))
+                {
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                    System.out.println("x= " + x + "Y= " + points.get(i));
+                }
+                if(Objects.equals(points.get(i + 1), points.get(i)))
+                {
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i - 1)));
+                    x+=sampling;
+                    System.out.println("\nx= " + x + "Y= " + points.get(i));
+
+                }
+                else
+                {
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                    System.out.println("x= " + x +"Y= " + points.get(i));
+
+                    x+=sampling;
+                }
+            }
+            catch (IndexOutOfBoundsException e){}*//*
+*//*            if(Math.abs(points.get(i+1)) > Math.abs((2*points.get(i))) || Math.abs(points.get(i+1)) < Math.abs((2*points.get(i))))
+            {
+                dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                System.out.println("x= " + x +"Y= " + points.get(i));
+                x+=sampling;
+            }
+            else *//*
+                if(Math.abs(points.get(i+1)) > Math.abs(points.get(i)))
+                //if(points.get(i+1) > points.get(i))
+            {
+                //dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+*//*                if(points.get(i) > 0)
+
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i) + sampling));
+                else
+                    dataSeries.getData().add(new XYChart.Data<>(x - sampling, points.get(i)));*//*
+
+                dataSeries.getData().add(new XYChart.Data<>(x, points.get(i) + sampling));
+                dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+
+                System.out.println("x= " + x +"Y= " + points.get(i));
+
+                x+=sampling;
+            }
+            else if(Math.abs(points.get(i+1)) <= Math.abs(points.get(i)))
+            //else if(points.get(i+1) <= points.get(i))
+            {
+                dataSeries.getData().add(new XYChart.Data<>(x + sampling, points.get(i)));
+                dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                System.out.println("x= " + x +"Y= " + points.get(i));
+
+                x+=sampling;
+            }
+*//*            else
+            {
+                dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                System.out.println("x= " + x +"Y= " + points.get(i));
+
+                x+=sampling;
+            }*/
+        x = initValue;
+
+        dataSeries.getData().add(new XYChart.Data<>(x, points.get(0)));
+        for (int i = 1; i < points.size()-1; i++)
+        {
+            if(i!=0) {
+                if ((points.get(i) > points.get(i-1)) && (points.get(i) > points.get(i+1))) {
+                    dataSeries.getData().add(new XYChart.Data<>(x + sampling, points.get(i)));
+                    //dataSeries.getData().add(new XYChart.Data<>(x, points.get(i+1)));
+                } else {
+                    if (points.get(i + 1) > points.get(i)) {
+                        dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                        dataSeries.getData().add(new XYChart.Data<>(x + sampling, points.get(i)));
+                        System.out.println("x= " + x + "Y= " + points.get(i));
+                        x += sampling;
+
+/*                if(points.get(i) < 0)
+                {
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i) - sampling));
+                    dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                }*/
+                    } else if (points.get(i + 1) < points.get(i)) {
+                        if (points.get(i) > 0) {
+                            dataSeries.getData().add(new XYChart.Data<>(x + sampling, points.get(i)));
+                            dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                        } else {
+                            dataSeries.getData().add(new XYChart.Data<>(x + sampling, points.get(i)));
+                            dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                        }
+                        System.out.println("x= " + x + "Y= " + points.get(i));
+                        x += sampling;
+                    }
+                    else
+                    {
+                        dataSeries.getData().add(new XYChart.Data<>(x, points.get(i)));
+                        x+=sampling;
+                    }
+                }
+            }
+
+        }
 
 
+        quantizedChart.getData().add(dataSeries);
 
     }
 }

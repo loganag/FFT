@@ -52,6 +52,8 @@ public class Controller implements Initializable {
         NumberAxis yAxisQuantized = (NumberAxis) quantizedChart.getYAxis();
         xAxisQuantized.setLabel("Время (сек)");
         yAxisQuantized.setLabel("Амплитуда");
+        quantizedChart.setCreateSymbols(false);
+        quantizedChart.setLegendVisible(false);
 
         NumberAxis xAxisFFT = (NumberAxis) fftChart.getXAxis();
         NumberAxis yAxisFFT = (NumberAxis) fftChart.getYAxis();
@@ -60,7 +62,9 @@ public class Controller implements Initializable {
 
         analogChart.getData().add(CalculatingGraphs.getAnalogDataSeries("y(x)=cos(x)+sin(2*x)",0, 8, 0.1));
 
-        CalculatingGraphs.buildingDiscreteGraph(discreteChart, "y(x)=cos(x)+sin(2*x)",0, 8, 0.1);
+        CalculatingGraphs.buildingDiscreteGraph(discreteChart, "y(x)=cos(x)+sin(2*x)",0, 8, 0.5);
 
+        quantizedChart.getData().add(CalculatingGraphs.getAnalogDataSeries("y(x)=cos(x)+sin(2*x)",0, 16, 0.1));
+        CalculatingGraphs.buildingQuantizedGraph(quantizedChart, "y(x)=cos(x)+sin(2*x)",0, 16, 0.2);
     }
 }
