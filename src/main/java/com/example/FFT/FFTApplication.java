@@ -24,7 +24,7 @@ public class FFTApplication extends Application {
     {
         launch();
 
-        long time = System.currentTimeMillis();
+/*        long time = System.currentTimeMillis();
         Function f1 = new Function("y(x) = cos(x) + sin(2*x)");
         double result = f1.calculate(2);
         System.out.println(result);
@@ -33,7 +33,7 @@ public class FFTApplication extends Application {
         time = System.currentTimeMillis();
         result = Math.cos(2) + Math.sin(2*2);
         System.out.println(result);
-        System.out.println(System.currentTimeMillis() - time);
+        System.out.println(System.currentTimeMillis() - time);*/
     }
 
 }

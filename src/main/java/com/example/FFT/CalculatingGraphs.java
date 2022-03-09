@@ -117,6 +117,64 @@ public class CalculatingGraphs {
         }
 
         quantizedChart.getData().add(dataSeries);
+    }
 
+
+    public static void buildingFFTGraph(LineChart<Number, Number> fftChart, String function, double initValue, double finalValue, double sampling)
+    {
+        double frequencyStep = 1/((finalValue-initValue)*sampling);
+        //System.out.println(frequencyStep);
+        int n = (int) Math.floor((finalValue-initValue)/sampling) + 1;
+        double[] frequency = new double[n];
+        double[] magnitude = new double[n];
+
+        XYChart.Series dataSeries = new XYChart.Series();
+
+        int j=0;
+        for (int i = -(n/2); i < (n/2); i++)
+        {
+            try {
+                frequency[j] = i * frequencyStep;
+                //System.out.println(frequency[j]);
+                j++;
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                break;
+            }
+        }
+
+        Complex[] initialData = FFT.vectorPreparation(initValue, finalValue, sampling);
+        Complex[] fftResult = FFT.fft(initialData);
+
+        //Вычисление магинтуды определенной частоты
+        for (int i = 0; i < n; i++)
+        {
+            magnitude[i] = fftResult[i].abs();
+            //System.out.println("fq" + frequency[i] + " mg= " + magnitude[i]);
+        }
+
+/*        for (int i = 0; i < n; i++)
+        {
+            dataSeries.getData().add(new XYChart.Data<>(frequency[i], magnitude[i]));
+        }*/
+        double[] testFq = new double[8];
+        int k = 0;
+        for (int i = -4; i < 4; i++) {
+            testFq[k] = i * 14.2857;
+            k++;
+        }
+        Complex[] test = new Complex[8];
+        for (int i = 0; i < 8; i++) {
+            test[i] = new Complex(i, 0);
+        }
+        double[] testMagnitude = new double[8];
+        Complex[] fftResultTest = FFT.fft(test);
+        for (int i = 0; i < 8; i++) {
+            testMagnitude[i] = fftResultTest[i].abs();
+            System.out.println("fq" + testFq[i] + " \tmg= " + testMagnitude[i] + " \treal= " + test[i].re() + " \timg = " + test[i].im());
+            dataSeries.getData().add(new XYChart.Data<>(testFq[i], testMagnitude[i]));
+        }
+
+        fftChart.getData().add(dataSeries);
     }
 }

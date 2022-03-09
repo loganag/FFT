@@ -55,7 +55,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane id="initTextField" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
             <TextField fx:id="initTextField" layoutX="144.0" layoutY="66.0" prefWidth="78.0" />
             <Label layoutX="29.0" layoutY="70.0" text="Начало диапазона" />
@@ -97,7 +97,7 @@
             </LineChart>
             <Button fx:id="buildButton" layoutX="95.0" layoutY="189.0" mnemonicParsing="false" onMouseClicked="#buildButtonClicked" text="Построить" />
             <Label layoutX="29.0" layoutY="31.0" text="y(x) =" />
-            <TextField id="functionTextField" layoutX="62.0" layoutY="27.0" prefHeight="25.0" prefWidth="159.0" />
+            <TextField fx:id="functionTextField" layoutX="62.0" layoutY="27.0" prefHeight="25.0" prefWidth="159.0" />
          </children>
     </AnchorPane>
   </children>
