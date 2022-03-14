@@ -32,10 +32,24 @@ public class CalculatingGraphs {
         return dataSeries;
     }
 
+    public static XYChart.Series getAnalogDataSeries(Complex[] array, int n)
+    {
+        XYChart.Series dataSeries = new XYChart.Series();
+
+        for (int i = 0; i < n; i++) {
+            dataSeries.getData().add(new XYChart.Data<>(array[i].re(), array[i].im()));
+        }
+
+        return dataSeries;
+    }
+
+
     public static void buildingDiscreteGraph(LineChart<Number, Number> discreteChart, String function, double initValue, double finalValue, double sampling)
     {
         double y;
         Function f1 = new Function(function);
+
+
 
         Color color = Color.BLUE;
 
@@ -60,6 +74,27 @@ public class CalculatingGraphs {
             x += sampling;
         }
     }
+
+    public static void buildingDiscreteGraph(LineChart<Number, Number> discreteChart, Complex[] array, int n)
+    {
+        Color color = Color.BLUE;
+
+        String rgb = String.format("%d, %d, %d",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+
+        for (int i = 0; i < n; i++) {
+            XYChart.Series dataSeries = new XYChart.Series();
+            dataSeries.getData().add(new XYChart.Data<>(array[i].re(), array[i].im()));
+            dataSeries.getData().add(new XYChart.Data<>(array[i].re(), 0.0));
+            discreteChart.getData().add(dataSeries);
+
+            Node line = dataSeries.getNode().lookup(".chart-series-line");
+            line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+        }
+    }
+
 
     public static void buildingQuantizedGraph(LineChart<Number, Number> quantizedChart, String function, double initValue, double finalValue, double sampling)
     {
@@ -143,7 +178,7 @@ public class CalculatingGraphs {
             }
         }
 
-        Complex[] initialData = FFT.vectorPreparation(initValue, finalValue, sampling);
+        Complex[] initialData = FFT.vectorPreparation(function, initValue, finalValue, sampling);
         Complex[] fftResult = FFT.fft(initialData);
 
         //Вычисление магинтуды определенной частоты
@@ -153,11 +188,13 @@ public class CalculatingGraphs {
             //System.out.println("fq" + frequency[i] + " mg= " + magnitude[i]);
         }
 
-/*        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             dataSeries.getData().add(new XYChart.Data<>(frequency[i], magnitude[i]));
-        }*/
-        double[] testFq = new double[8];
+        }
+
+
+/*        double[] testFq = new double[8];
         int k = 0;
         for (int i = -4; i < 4; i++) {
             testFq[k] = i * 14.2857;
@@ -173,6 +210,46 @@ public class CalculatingGraphs {
             testMagnitude[i] = fftResultTest[i].abs();
             System.out.println("fq" + testFq[i] + " \tmg= " + testMagnitude[i] + " \treal= " + test[i].re() + " \timg = " + test[i].im());
             dataSeries.getData().add(new XYChart.Data<>(testFq[i], testMagnitude[i]));
+        }*/
+
+        fftChart.getData().add(dataSeries);
+    }
+
+    public static void buildingFFTGraph(LineChart<Number, Number> fftChart, Complex[] points, int n, int oldN)
+    {
+        double sampling = (points[1].re() - points[0].re());
+        System.out.println(sampling);
+        double frequencyStep = 1/((points[oldN-1].re()-points[0].re())*sampling);
+        System.out.println(frequencyStep);
+        double[] frequency = new double[n];
+        double[] magnitude = new double[n];
+
+        XYChart.Series dataSeries = new XYChart.Series();
+
+        int j=0;
+        for (int i = -(n/2); i < (n/2); i++)
+        {
+            try {
+                frequency[j] = i * frequencyStep;
+                j++;
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+                break;
+            }
+        }
+
+        Complex[] fftResult = FFT.fft(points);
+
+        //Вычисление магинтуды определенной частоты
+        for (int i = 0; i < n; i++)
+        {
+            magnitude[i] = fftResult[i].abs();
+            //System.out.println("fq" + frequency[i] + " mg= " + magnitude[i]);
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            dataSeries.getData().add(new XYChart.Data<>(frequency[i], magnitude[i]));
         }
 
         fftChart.getData().add(dataSeries);
