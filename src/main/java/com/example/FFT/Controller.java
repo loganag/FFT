@@ -102,21 +102,10 @@ public class Controller implements Initializable {
         CalculatingGraphs.buildingDiscreteGraph(discreteChart, function, initValue, finalValue, samplingRate);
 
         quantizedChart.getData().add(CalculatingGraphs.getAnalogDataSeries(function, initValue, finalValue, 0.01));
-        //CalculatingGraphs.buildingQuantizedGraph(quantizedChart, "y(x)=cos(x-0.1)+sin(2*x-0.1)",0, 8, 0.1);
+
         CalculatingGraphs.buildingQuantizedGraph(quantizedChart, function, initValue, finalValue, samplingRate);
 
         CalculatingGraphs.buildingFFTGraph(fftChart, function, initValue, finalValue, samplingRate);
-
-
-/*        analogChart.getData().add(CalculatingGraphs.getAnalogDataSeries("y(x)=cos(x)+sin(2*x)", 0, 8, 0.1));
-
-        CalculatingGraphs.buildingDiscreteGraph(discreteChart, "y(x)=cos(x)+sin(2*x)", 0, 8, 0.5);
-
-        quantizedChart.getData().add(CalculatingGraphs.getAnalogDataSeries("y(x)=cos(x)+sin(2*x)", 0, 8, 0.1));
-        //CalculatingGraphs.buildingQuantizedGraph(quantizedChart, "y(x)=cos(x-0.1)+sin(2*x-0.1)",0, 8, 0.1);
-        CalculatingGraphs.buildingQuantizedGraph(quantizedChart, "y(x)=cos(x-0.25)+sin((2*x)-0.25)", 0, 8, 0.25);
-
-        CalculatingGraphs.buildingFFTGraph(fftChart, "y(x)=cos(x)+sin(2*x)", 0, 8, 0.01);*/
 
     }
 
@@ -188,6 +177,7 @@ public class Controller implements Initializable {
         }
 
         FFT.show(complexArray);
+
 
         XYChart.Series dataSeries = new XYChart.Series();
         dataSeries.getData().removeAll(Collections.singleton(fftChart.getData().setAll()));

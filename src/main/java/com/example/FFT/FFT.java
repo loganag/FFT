@@ -3,14 +3,11 @@ package com.example.FFT;
 import org.mariuszgromada.math.mxparser.Function;
 
 public class FFT {
-
     public static Complex[] fft(Complex[] a)
     {
         int n = a.length;
 
-        if(n == 1 ) return a;
-
-        //if((n & (n - 1)) == 0) return new Exception("Не является степенью 2-ки");
+        if(n == 1 ) return new Complex[] { a[0] };
 
         //Расчет для четной части
         Complex[] even = new Complex[n/2];
@@ -18,7 +15,6 @@ public class FFT {
             even[i] = a[2 * i];
         }
         Complex[] evenFFT = fft(even);
-        //show(evenFFT);
 
         //Расчет для нечетной части
         Complex[] odd = new Complex[n/2];
@@ -27,7 +23,10 @@ public class FFT {
             odd[i] = a[2 * i +1];
         }
         Complex[] oddFFT = fft(odd);
+
         //show(evenFFT);
+        //System.out.println("\n");
+        //show(oddFFT);
 
         //Объединение результатов
         Complex[] y = new Complex[n];
@@ -36,10 +35,11 @@ public class FFT {
             double Wi = (-2 * i * Math.PI) / n;
             Complex complexWi = new Complex(Math.cos(Wi), Math.sin(Wi));
             y[i] = evenFFT[i].plus(complexWi.multiply(oddFFT[i]));
-            y[i + n/2] = evenFFT[i].minus(complexWi.multiply(oddFFT[i]));
+            y[i + (n/2)] = evenFFT[i].minus(complexWi.multiply(oddFFT[i]));
 
         }
-
+        //System.out.printf("Rez= ");
+        //show(y);
         return y;
     }
 
@@ -47,7 +47,8 @@ public class FFT {
     {
         for(int i =0; i< x.length; i++)
         {
-            System.out.println(x[i]);
+            //System.out.println(x[i]);
+            System.out.printf(x[i] + " ");
         }
     }
 
@@ -61,13 +62,10 @@ public class FFT {
 
 
         Complex[] arr = new Complex[newN];
-        //arr[0] = new Complex(Math.cos(initValue) + Math.sin(2*initValue), 0);
         for (int i = 0; i < newN; i++) {
-            //System.out.println(x);
             arr[i] = new Complex(f1.calculate(x), 0);
             x += sampling;
         }
-        //FFT.show(arr);
         return arr;
     }
 

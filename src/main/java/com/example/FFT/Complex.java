@@ -12,6 +12,12 @@ public class Complex {
         im = imag;
     }
 
+    public Complex(double real)
+    {
+        re = real;
+        im = 0;
+    }
+
     // return a string representation of the invoking Complex object
     public String toString() {
         if (im == 0) return re + "";

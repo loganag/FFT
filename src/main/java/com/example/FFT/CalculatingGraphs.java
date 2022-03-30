@@ -8,6 +8,9 @@ import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 import org.mariuszgromada.math.mxparser.Function;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -157,9 +160,14 @@ public class CalculatingGraphs {
 
     public static void buildingFFTGraph(LineChart<Number, Number> fftChart, String function, double initValue, double finalValue, double sampling)
     {
+        int oldN = (int) Math.floor((finalValue-initValue)/sampling) + 1;
+
+        int n = (int) Math.pow(2, Math.ceil(Math.log(oldN)/Math.log(2)));     //Приведение к степени 2-ки
+
         double frequencyStep = 1/((finalValue-initValue)*sampling);
-        //System.out.println(frequencyStep);
-        int n = (int) Math.floor((finalValue-initValue)/sampling) + 1;
+        double frequencyCoefficient = oldN * 1.0 / n;
+        frequencyStep *= frequencyCoefficient;
+
         double[] frequency = new double[n];
         double[] magnitude = new double[n];
 
@@ -181,36 +189,32 @@ public class CalculatingGraphs {
         Complex[] initialData = FFT.vectorPreparation(function, initValue, finalValue, sampling);
         Complex[] fftResult = FFT.fft(initialData);
 
-        //Вычисление магинтуды определенной частоты
+        //Вычисление магнитуды определенной частоты
         for (int i = 0; i < n; i++)
         {
             magnitude[i] = fftResult[i].abs();
             //System.out.println("fq" + frequency[i] + " mg= " + magnitude[i]);
         }
 
+        //Инвертирование графика через центр
+        double[] invertedMagnitude = new double[n];
+        j = 0;
+        for(int i = n/2; i > 0; i--)
+        {
+            invertedMagnitude[i] = magnitude[j];
+            j++;
+        }
+
+        j = n-1;
+        for(int i = n/2; i < n; i++){
+            invertedMagnitude[i] = magnitude[j];
+            j--;
+        }
+
         for (int i = 0; i < n; i++)
         {
-            dataSeries.getData().add(new XYChart.Data<>(frequency[i], magnitude[i]));
+            dataSeries.getData().add(new XYChart.Data<>(frequency[i], invertedMagnitude[i]));
         }
-
-
-/*        double[] testFq = new double[8];
-        int k = 0;
-        for (int i = -4; i < 4; i++) {
-            testFq[k] = i * 14.2857;
-            k++;
-        }
-        Complex[] test = new Complex[8];
-        for (int i = 0; i < 8; i++) {
-            test[i] = new Complex(i, 0);
-        }
-        double[] testMagnitude = new double[8];
-        Complex[] fftResultTest = FFT.fft(test);
-        for (int i = 0; i < 8; i++) {
-            testMagnitude[i] = fftResultTest[i].abs();
-            System.out.println("fq" + testFq[i] + " \tmg= " + testMagnitude[i] + " \treal= " + test[i].re() + " \timg = " + test[i].im());
-            dataSeries.getData().add(new XYChart.Data<>(testFq[i], testMagnitude[i]));
-        }*/
 
         fftChart.getData().add(dataSeries);
     }
@@ -219,7 +223,10 @@ public class CalculatingGraphs {
     {
         double sampling = (points[1].re() - points[0].re());
         System.out.println(sampling);
-        double frequencyStep = 1/((points[oldN-1].re()-points[0].re())*sampling);
+        //double frequencyStep = 1/((points[oldN-1].re()-points[0].re())*sampling);
+        double frequencyCoefficient = oldN * 1.0 / n;
+        double frequencyStep = 1/(points[oldN-1].re() - points[0].re());
+        frequencyStep *= frequencyCoefficient;
         System.out.println(frequencyStep);
         double[] frequency = new double[n];
         double[] magnitude = new double[n];
@@ -240,16 +247,63 @@ public class CalculatingGraphs {
 
         Complex[] fftResult = FFT.fft(points);
 
+
+        try {
+            PrintWriter writer = new PrintWriter("combinationFFT.txt", StandardCharsets.UTF_8);
+            for (Complex item:fftResult) {
+                writer.println(Double.toString(item.re()) + "\t" +Double.toString(item.im()));
+                System.out.println(item.re() + "\t" + item.im());
+            }
+            writer.close();
+
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't write to file");
+        }
+
+        double max = -1000000;
+        int maxI=0;
         //Вычисление магинтуды определенной частоты
         for (int i = 0; i < n; i++)
         {
             magnitude[i] = fftResult[i].abs();
             //System.out.println("fq" + frequency[i] + " mg= " + magnitude[i]);
+            if(magnitude[i] > max) {
+                max = magnitude[i];
+                maxI = i;
+            }
         }
+
+        System.out.println("Maximum " + max);
+        System.out.println("frequency " + frequency[maxI]);
+
+
+        //Инвертирование графика через центр
+        double[] invertedMagnitude = new double[n];
+        j = 0;
+        for(int i = n/2; i > 0; i--)
+        {
+            invertedMagnitude[i] = magnitude[j];
+            j++;
+        }
+
+        j = n-1;
+        for(int i = n/2; i < n; i++){
+            invertedMagnitude[i] = magnitude[j];
+            j--;
+        }
+
+
+        for (int i = 0; i <n; i++) {
+            System.out.println(invertedMagnitude[i]);
+        }
+
+
 
         for (int i = 0; i < n; i++)
         {
-            dataSeries.getData().add(new XYChart.Data<>(frequency[i], magnitude[i]));
+            dataSeries.getData().add(new XYChart.Data<>(frequency[i], invertedMagnitude[i]));
         }
 
         fftChart.getData().add(dataSeries);
